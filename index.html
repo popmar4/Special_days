@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="es">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>¿Quieres ser mi Valentín?</title>
+  <title>Will you be my Valentine?</title>
   <style>
     :root { --pad: 20px; }
     body {
@@ -64,14 +64,14 @@
 </head>
 <body>
   <div class="card" id="card">
-    <h1>¿Quieres ser mi Valentín? 💘</h1>
-    <p>Prometo risas, mimos y un plan bonito contigo.</p>
+    <h1>Will you be my Valentine? 💘</h1>
+    <p>I promise laughter, affection, and a beautiful plan with you.</p>
 
-    <button class="btn" id="yes">Sí</button>
+    <button class="btn" id="yes">Yes</button>
     <button class="btn" id="no" aria-label="No">No</button>
 
     <div class="msg" id="msg"></div>
-    <div class="small" id="hint">Pista: el “No” es un poco tímido 😄</div>
+    <div class="small" id="hint">Hint: the “No” button is a bit shy 😄</div>
   </div>
 
   <script>
@@ -80,7 +80,6 @@
     const msg = document.getElementById("msg");
     const hint = document.getElementById("hint");
 
-    // Ajusta esto: cuántas veces "se escapa" antes de dejarse pulsar.
     const MAX_ESCAPES = 10;
 
     let escapes = 0;
@@ -90,7 +89,6 @@
 
     function moveNoButton() {
       const pad = 18;
-
       const vw = window.innerWidth;
       const vh = window.innerHeight;
 
@@ -98,7 +96,6 @@
       const bw = rect.width;
       const bh = rect.height;
 
-      // zona segura dentro de la ventana
       const minX = pad;
       const maxX = vw - bw - pad;
       const minY = pad;
@@ -117,46 +114,31 @@
       const left = MAX_ESCAPES - escapes;
 
       if (left > 0) {
-        hint.textContent = `El “No” se está haciendo el interesante… (${left})`;
+        hint.textContent = `The “No” button is playing hard to get… (${left})`;
         moveNoButton();
       } else {
-        // Se desbloquea: ya puede pulsarse
         noUnlocked = true;
-        hint.textContent = "Ok ok… si de verdad quieres pulsarlo, ahora te dejo 😄";
+        hint.textContent = "Alright… if you really want to click it, I’ll let you 😄";
         noBtn.style.cursor = "pointer";
       }
     }
 
-    // Se escapa al acercar ratón o tocar (móvil), pero solo hasta MAX_ESCAPES
     noBtn.addEventListener("mouseenter", () => { if (!noUnlocked) tease(); });
     noBtn.addEventListener("touchstart", (e) => {
       if (!noUnlocked) { e.preventDefault(); tease(); }
     }, { passive: false });
 
-    // Click en No (cuando ya se desbloquea)
     noBtn.addEventListener("click", () => {
-      if (!noUnlocked) return; // por si acaso
-      msg.textContent = "Vale 😄 Aun así, te invito a un plan bonito cuando quieras.";
+      if (!noUnlocked) return;
+      msg.textContent = "Fair enough 😄 Still, I owe you a nice date sometime.";
       msg.style.color = "#111";
-      hint.textContent = "Gracias por jugar conmigo 💛";
+      hint.textContent = "Thanks for playing along 💛";
     });
 
-    // Click en Sí
     yesBtn.addEventListener("click", () => {
-      msg.textContent = "¡SÍÍÍ! 💞 Entonces… ¿cuándo y dónde? 😏";
+      msg.textContent = "YESS! 💞 So… when and where? 😏";
       msg.style.color = "#ff3b7a";
-      hint.textContent = "Te quiero. Feliz San Valentín 💘";
-    });
-
-    // Inicial: coloca el No en posición agradable
-    // (si redimensiona, que no se quede fuera)
-    window.addEventListener("resize", () => {
-      // si está desbloqueado, no lo muevas automáticamente; si no, recolócalo
-      if (!noUnlocked) {
-        noBtn.style.left = "50%";
-        noBtn.style.top = "62%";
-        noBtn.style.transform = "translate(-50%, -50%)";
-      }
+      hint.textContent = "I love you. Happy Valentine’s Day 💘";
     });
   </script>
 </body>
