@@ -134,6 +134,7 @@
 
     let escapes = 0;
     let noUnlocked = false;
+    let yesClicked = false;
 
     function moveNoButton() {
       const pad = 12;
@@ -155,6 +156,8 @@
     }
 
     function tease() {
+      if (yesClicked) return;
+      
       escapes++;
       const left = MAX_ESCAPES - escapes;
 
@@ -178,6 +181,8 @@
     });
 
     yesBtn.addEventListener("click", () => {
+      yesClicked = true;
+      
       msg.textContent = "YESS! 💞";
       msg.style.color = "#ff3b7a";
       hint.textContent = "Now choose our date 💘";
