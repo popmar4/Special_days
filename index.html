@@ -38,9 +38,6 @@
       display: flex;
       justify-content: center;
       gap: 12px;
-      position: relative;
-      min-height: 46px;          /* 👈 neu: Platz für den absoluten No-Button */
-      padding-right: 120px;      /* 👈 neu: reserviert Platz rechts für "No" */
     }
 
 
@@ -65,9 +62,6 @@
     #no {
       background: #f0f0f0;
       color: #111;
-      position: absolute;
-      left: 65%;
-      top: 0;
     }
 
     #dateOptions {
@@ -155,6 +149,7 @@
       const x = Math.random() * (maxX - minX) + minX;
       const y = Math.random() * (maxY - minY) + minY;
 
+      noBtn.style.position = "absolute"; 
       noBtn.style.left = `${x}px`;
       noBtn.style.top = `${y}px`;
     }
