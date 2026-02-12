@@ -4,8 +4,10 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Will you be my Valentine?</title>
+
   <style>
     :root { --pad: 20px; }
+
     body {
       margin: 0;
       height: 100vh;
@@ -15,6 +17,7 @@
       background: radial-gradient(circle at top, #ffe7ef, #fff);
       overflow: hidden;
     }
+
     .card {
       width: min(560px, calc(100% - 2*var(--pad)));
       background: rgba(255,255,255,.9);
@@ -26,8 +29,17 @@
       position: relative;
       overflow: hidden;
     }
+
     h1 { margin: 0 0 10px; font-size: clamp(26px, 4vw, 38px); }
     p  { margin: 0 0 18px; color: #333; }
+
+    .buttons {
+      margin-top: 10px;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      position: relative;
+    }
 
     .btn {
       border: 0;
@@ -38,36 +50,37 @@
       user-select: none;
       transition: transform .12s ease, filter .12s ease;
     }
+
     .btn:active { transform: scale(.98); }
 
     #yes {
       background: #ff3b7a;
       color: white;
       filter: drop-shadow(0 10px 18px rgba(255,59,122,.22));
-      margin-right: 10px;
     }
 
     #no {
       background: #f0f0f0;
       color: #111;
       position: absolute;
-      left: 50%;
-      top: 62%;
-      transform: translate(-50%, -50%);
+      left: 65%;
+      top: 0;
     }
 
     #dateOptions {
       display: none;
       margin-top: 18px;
     }
+
     .optionsGrid {
       display: grid;
       gap: 10px;
       justify-content: center;
       margin-top: 10px;
     }
+
     .optionBtn {
-      background: #ffffff;
+      background: white;
       border: 1px solid rgba(0,0,0,.08);
       color: #111;
     }
@@ -77,6 +90,7 @@
       font-weight: 600;
       min-height: 28px;
     }
+
     .small {
       margin-top: 10px;
       font-size: 12px;
@@ -91,11 +105,14 @@
     <h1>Will you be my Valentine? 💘</h1>
     <p>I promise laughter, affection, and a beautiful plan with you.</p>
 
-    <button class="btn" id="yes">Yes</button>
-    <button class="btn" id="no" aria-label="No">No</button>
+    <div class="buttons">
+      <button class="btn" id="yes">Yes</button>
+      <button class="btn" id="no">No</button>
+    </div>
 
     <div id="dateOptions">
-      <p style="margin: 14px 0 0; color:#333;">Pick our date idea 👇</p>
+      <p style="margin: 14px 0 0;">Pick our date idea 👇</p>
+
       <div class="optionsGrid">
         <button class="btn optionBtn" data-choice="Dinner date 🍝">Dinner date 🍝</button>
         <button class="btn optionBtn" data-choice="Movie night 🎬">Movie night 🎬</button>
@@ -117,6 +134,7 @@
     const dateOptions = document.getElementById("dateOptions");
 
     const MAX_ESCAPES = 10;
+
     let escapes = 0;
     let noUnlocked = false;
 
@@ -136,7 +154,6 @@
 
       noBtn.style.left = `${x}px`;
       noBtn.style.top = `${y}px`;
-      noBtn.style.transform = "none";
     }
 
     function tease() {
@@ -148,19 +165,16 @@
         moveNoButton();
       } else {
         noUnlocked = true;
-        hint.textContent = "Alright… if you really want to click it, I’ll let you 😄";
-        noBtn.style.cursor = "pointer";
+        hint.textContent = "Alright… now you can click it 😄";
       }
     }
 
     noBtn.addEventListener("mouseenter", () => { if (!noUnlocked) tease(); });
-    noBtn.addEventListener("touchstart", (e) => {
-      if (!noUnlocked) { e.preventDefault(); tease(); }
-    }, { passive: false });
 
     noBtn.addEventListener("click", () => {
       if (!noUnlocked) return;
-      msg.textContent = "Fair enough 😄 Still, I owe you a nice date sometime.";
+
+      msg.textContent = "Fair enough 😄 Still, I owe you a nice date.";
       msg.style.color = "#111";
       hint.textContent = "Thanks for playing along 💛";
     });
@@ -168,7 +182,7 @@
     yesBtn.addEventListener("click", () => {
       msg.textContent = "YESS! 💞";
       msg.style.color = "#ff3b7a";
-      hint.textContent = "Now choose our date idea 💘";
+      hint.textContent = "Now choose our date 💘";
 
       dateOptions.style.display = "block";
     });
@@ -182,10 +196,6 @@
       msg.textContent = `Perfect 😍 We’ll do: ${choice}`;
       msg.style.color = "#ff3b7a";
       hint.textContent = "Deal. Happy Valentine’s Day 💘";
-
-      // Optional: highlight selection
-      [...dateOptions.querySelectorAll("button[data-choice]")].forEach(b => b.style.filter = "");
-      btn.style.filter = "brightness(0.95)";
     });
   </script>
 </body>
