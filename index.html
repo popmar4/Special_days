@@ -24,9 +24,11 @@
       box-shadow: 0 18px 50px rgba(0,0,0,.08);
       text-align: center;
       position: relative;
+      overflow: hidden;
     }
     h1 { margin: 0 0 10px; font-size: clamp(26px, 4vw, 38px); }
     p  { margin: 0 0 18px; color: #333; }
+
     .btn {
       border: 0;
       padding: 12px 18px;
@@ -37,11 +39,14 @@
       transition: transform .12s ease, filter .12s ease;
     }
     .btn:active { transform: scale(.98); }
+
     #yes {
       background: #ff3b7a;
       color: white;
       filter: drop-shadow(0 10px 18px rgba(255,59,122,.22));
+      margin-right: 10px;
     }
+
     #no {
       background: #f0f0f0;
       color: #111;
@@ -50,6 +55,23 @@
       top: 62%;
       transform: translate(-50%, -50%);
     }
+
+    #dateOptions {
+      display: none;
+      margin-top: 18px;
+    }
+    .optionsGrid {
+      display: grid;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 10px;
+    }
+    .optionBtn {
+      background: #ffffff;
+      border: 1px solid rgba(0,0,0,.08);
+      color: #111;
+    }
+
     .msg {
       margin-top: 18px;
       font-weight: 600;
@@ -59,9 +81,11 @@
       margin-top: 10px;
       font-size: 12px;
       color: #666;
+      min-height: 18px;
     }
   </style>
 </head>
+
 <body>
   <div class="card" id="card">
     <h1>Will you be my Valentine? 💘</h1>
@@ -70,43 +94,50 @@
     <button class="btn" id="yes">Yes</button>
     <button class="btn" id="no" aria-label="No">No</button>
 
+    <div id="dateOptions">
+      <p style="margin: 14px 0 0; color:#333;">Pick our date idea 👇</p>
+      <div class="optionsGrid">
+        <button class="btn optionBtn" data-choice="Dinner date 🍝">Dinner date 🍝</button>
+        <button class="btn optionBtn" data-choice="Movie night 🎬">Movie night 🎬</button>
+        <button class="btn optionBtn" data-choice="Coffee + walk ☕️">Coffee + walk ☕️</button>
+        <button class="btn optionBtn" data-choice="Surprise plan 😏">Surprise plan 😏</button>
+      </div>
+    </div>
+
     <div class="msg" id="msg"></div>
     <div class="small" id="hint">Hint: the “No” button is a bit shy 😄</div>
   </div>
 
   <script>
+    const card = document.getElementById("card");
     const noBtn = document.getElementById("no");
     const yesBtn = document.getElementById("yes");
     const msg = document.getElementById("msg");
     const hint = document.getElementById("hint");
+    const dateOptions = document.getElementById("dateOptions");
 
     const MAX_ESCAPES = 10;
-
     let escapes = 0;
     let noUnlocked = false;
 
-    function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
-
     function moveNoButton() {
-  const pad = 12;
+      const pad = 12;
 
-  const card = document.getElementById("card");
-  const cardRect = card.getBoundingClientRect();
-  const btnRect = noBtn.getBoundingClientRect();
+      const cardRect = card.getBoundingClientRect();
+      const btnRect = noBtn.getBoundingClientRect();
 
-  const minX = pad;
-  const minY = pad;
-  const maxX = cardRect.width - btnRect.width - pad;
-  const maxY = cardRect.height - btnRect.height - pad;
+      const minX = pad;
+      const minY = pad;
+      const maxX = cardRect.width - btnRect.width - pad;
+      const maxY = cardRect.height - btnRect.height - pad;
 
-  const x = Math.random() * (maxX - minX) + minX;
-  const y = Math.random() * (maxY - minY) + minY;
+      const x = Math.random() * (maxX - minX) + minX;
+      const y = Math.random() * (maxY - minY) + minY;
 
-  noBtn.style.left = `${x}px`;
-  noBtn.style.top = `${y}px`;
-  noBtn.style.transform = "none";
-}
-
+      noBtn.style.left = `${x}px`;
+      noBtn.style.top = `${y}px`;
+      noBtn.style.transform = "none";
+    }
 
     function tease() {
       escapes++;
@@ -135,9 +166,26 @@
     });
 
     yesBtn.addEventListener("click", () => {
-      msg.textContent = "YESS! 💞 So… when and where? 😏";
+      msg.textContent = "YESS! 💞";
       msg.style.color = "#ff3b7a";
-      hint.textContent = "I love you. Happy Valentine’s Day 💘";
+      hint.textContent = "Now choose our date idea 💘";
+
+      dateOptions.style.display = "block";
+    });
+
+    dateOptions.addEventListener("click", (e) => {
+      const btn = e.target.closest("button[data-choice]");
+      if (!btn) return;
+
+      const choice = btn.getAttribute("data-choice");
+
+      msg.textContent = `Perfect 😍 We’ll do: ${choice}`;
+      msg.style.color = "#ff3b7a";
+      hint.textContent = "Deal. Happy Valentine’s Day 💘";
+
+      // Optional: highlight selection
+      [...dateOptions.querySelectorAll("button[data-choice]")].forEach(b => b.style.filter = "");
+      btn.style.filter = "brightness(0.95)";
     });
   </script>
 </body>
