@@ -38,8 +38,9 @@
       display: flex;
       justify-content: center;
       gap: 12px;
+      position: relative;
+      z-index: 2; /* stays above moving No */
     }
-
 
     .btn {
       border: 0;
@@ -67,6 +68,8 @@
     #dateOptions {
       display: none;
       margin-top: 18px;
+      position: relative;
+      z-index: 1;
     }
 
     .optionsGrid {
@@ -80,6 +83,7 @@
       background: white;
       border: 1px solid rgba(0,0,0,.08);
       color: #111;
+      text-align: left;
     }
 
     .msg {
@@ -102,7 +106,7 @@
     <h1>Ira, will you be my Valentine? 💘</h1>
     <p>I promise laughter, affection, and a beautiful plan with you.</p>
 
-    <div class="buttons">
+    <div class="buttons" id="buttonsRow">
       <button class="btn" id="yes">Yes</button>
       <button class="btn" id="no">No</button>
     </div>
@@ -111,19 +115,20 @@
       <p style="margin: 14px 0 0;">My date ideas 👇</p>
 
       <div class="optionsGrid">
-        <button class="btn optionBtn" data-choice="Dinner date 🍝">Our Sushi Dinner date 🍝</button>
-        <button class="btn optionBtn" data-choice="Movie night 🎬">Movie night in Cinema, a movie you liked came recently out :P 🎬</button>
-        <button class="btn optionBtn" data-choice="Ice-Skating in SAP Garden ⛸️ ">Ice-Skating in SAP Garden ⛸️ </button>
-        <button class="btn optionBtn" data-choice="Therme and Saune 🌡️ ">Therme Erding (still got the 2 copunf for US) 🌡️</button>
+        <button class="btn optionBtn" data-choice="Sushi dinner 🍣">Our sushi dinner 🍣</button>
+        <button class="btn optionBtn" data-choice="Cinema night 🎬">Movie night in the cinema (a movie you liked just came out 😏) 🎬</button>
+        <button class="btn optionBtn" data-choice="Ice-skating at SAP Garden ⛸️">Ice-skating at SAP Garden ⛸️</button>
+        <button class="btn optionBtn" data-choice="Therme Erding + sauna 🌡️">Therme Erding (we still have the 2 coupons) 🌡️</button>
       </div>
     </div>
 
     <div class="msg" id="msg"></div>
-    <div class="small" id="hint">Hint: the “No” button is a bit shy and doesnt give up (just like me) 😄</div>
+    <div class="small" id="hint">Hint: the “No” button is a bit shy and doesn’t give up (just like me) 😄</div>
   </div>
 
   <script>
     const card = document.getElementById("card");
+    const buttonsRow = document.getElementById("buttonsRow");
     const noBtn = document.getElementById("no");
     const yesBtn = document.getElementById("yes");
     const msg = document.getElementById("msg");
@@ -150,14 +155,25 @@
       const x = Math.random() * (maxX - minX) + minX;
       const y = Math.random() * (maxY - minY) + minY;
 
-      noBtn.style.position = "absolute"; 
+      noBtn.style.position = "absolute";
       noBtn.style.left = `${x}px`;
       noBtn.style.top = `${y}px`;
+      noBtn.style.zIndex = 3; // stay above
+    }
+
+    function resetNoButtonToRow() {
+      // Put it back next to "Yes" and stop absolute positioning
+      noBtn.style.position = "";
+      noBtn.style.left = "";
+      noBtn.style.top = "";
+      noBtn.style.zIndex = "";
+      // Ensure it sits in the row again
+      buttonsRow.appendChild(noBtn);
     }
 
     function tease() {
       if (yesClicked) return;
-      
+
       escapes++;
       const left = MAX_ESCAPES - escapes;
 
@@ -170,22 +186,32 @@
       }
     }
 
+    // Desktop
     noBtn.addEventListener("mouseenter", () => { if (!noUnlocked) tease(); });
+
+    // Mobile / touch
+    noBtn.addEventListener("touchstart", (e) => {
+      if (yesClicked) return;
+      if (!noUnlocked) { e.preventDefault(); tease(); }
+    }, { passive: false });
 
     noBtn.addEventListener("click", () => {
       if (!noUnlocked) return;
 
-      msg.textContent = "Fair enough 😄 I still love you for ETERNITY :) ";
+      msg.textContent = "Fair enough 😄 I still love you for ETERNITY :)";
       msg.style.color = "#111";
       hint.textContent = "Thanks for playing along 💛";
     });
 
     yesBtn.addEventListener("click", () => {
       yesClicked = true;
-      
+
+      // after Yes: stop moving + put No back neatly
+      resetNoButtonToRow();
+
       msg.textContent = "YESS! 💞";
       msg.style.color = "#ff3b7a";
-      hint.textContent = "Now choose our dateplan 💘";
+      hint.textContent = "Now choose our date idea 💘";
 
       dateOptions.style.display = "block";
     });
@@ -196,9 +222,9 @@
 
       const choice = btn.getAttribute("data-choice");
 
-      msg.textContent = `Perfect 😍 We’ll do but I cant see your choices hahahah: ${choice}`;
+      msg.textContent = `Perfect 😍 We’ll do: ${choice}`;
       msg.style.color = "#ff3b7a";
-      hint.textContent = "Deal. Happy Valentine’s Day 💘 I love you and miss you soooo muuch!";
+      hint.textContent = "Deal. Happy Valentine’s Day 💘 I love you and miss you so much!";
     });
   </script>
 </body>
